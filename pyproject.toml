@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fftrr_poisson"
+version = "1.0.0"
+authors = [
+    { name="Charlie Pyle", email="Charliepyle@tamu.edu" },
+    { name="Dr. Prabir Daripa" }
+]
+description = "A Fast Fourier Transform Recursive Relationship (FFTRR) algorithm for solving the Poisson Equation on the Unit Disk."
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "numpy",
+    "matplotlib"
+]
