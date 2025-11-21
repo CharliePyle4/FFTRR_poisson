@@ -1,22 +1,36 @@
+"""
+Cartesian grid generation for the unit disk.
+
+This module provides routines for converting from polar (radius, angle)
+to Cartesian (x, y) coordinates, as well as assembling 2D coordinate
+meshes for use in numerical solutions on the unit disk.
+
+Functions
+---------
+pol2cart : Convert (rho, phi) polar coordinates to (x, y) Cartesian.
+generate_cartesian_grid_on_disk : Build Cartesian grid arrays from
+                                  specified radial and angular coordinates.
+"""
 import numpy as np
 
 def pol2cart(rho, phi):
     """
-    Convert Polar Coordinates to cartesian coordinates
+    Convert polar coordinates (rho, phi) to Cartesian coordinates (x, y).
 
     Parameters
     ----------
-    rho : float or ndarray
-        Radial coordinate(s).
-    phi : float or ndarray
-        Angular coordinate(s), in radians.
+    rho : float or ndarray of shape (M,) or shape matching phi
+        Radial coordinate(s). Can be a scalar or array.
+    phi : float or ndarray of shape (N,) or shape matching rho
+        Angular coordinate(s), in radians. Can be a scalar or array.
 
     Returns
     -------
     x : float or ndarray
-        x-coordinate(s) corresponding to the input.
+        x-coordinate(s) corresponding to input (same shape as broadcasted inputs).
     y : float or ndarray
-        y-coordinate(s) corresponding to the input.
+        y-coordinate(s) corresponding to input (same shape as broadcasted inputs).
+
     """
     x = rho * np.cos(phi)
     y = rho * np.sin(phi)
@@ -24,22 +38,31 @@ def pol2cart(rho, phi):
 
 def generate_cartesian_grid_on_disk(iAngle, iRadius):
     """
-    Generate Cartesian grid coordinates (x, y) on a disk
-    from polar coordinates defined by iAngle and iRadius.
+    Generate Cartesian (x, y) grid coordinates for the unit disk based on arrays of angles and radii.
 
     Parameters
     ----------
-    iAngle : ndarray, shape (N,)
-        Azimuthal mesh points (angles in radians).
-    iRadius : ndarray, shape (M,)
-        Radial mesh points.
+    iAngle : ndarray of shape (N,)
+        Array of azimuthal angle mesh points, in radians.
+    iRadius : ndarray of shape (M,)
+        Array of radial mesh points (from 0 out to disk radius).
 
     Returns
     -------
-    x_coord : ndarray, shape (N, M)
-        x-coordinates of the grid (rows = angles, cols = radii).
-    y_coord : ndarray, shape (N, M)
-        y-coordinates of the grid (rows = angles, cols = radii).
+    x_coord : ndarray of shape (N, M)
+        x-coordinates at each (angle, radius) grid point,
+        where `x_coord[k, j]` corresponds to iAngle[k], iRadius[j].
+    y_coord : ndarray of shape (N, M)
+        y-coordinates at each (angle, radius) grid point,
+        where `y_coord[k, j]` corresponds to iAngle[k], iRadius[j].
+
+    Examples
+    --------
+    >>> angles = np.linspace(0, 2*np.pi, 5)
+    >>> radii = np.linspace(0, 1, 3)
+    >>> x, y = generate_cartesian_grid_on_disk(angles, radii)
+    >>> x.shape, y.shape
+    ((5, 3), (5, 3))
     """
 
     #N describes the number of points azimuthally.
